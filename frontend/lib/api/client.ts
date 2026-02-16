@@ -3,6 +3,7 @@
  */
 
 import { ApiError } from "@/types";
+import { getToken } from "@/lib/auth/token";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
@@ -35,10 +36,15 @@ async function apiRequest<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  const token = getToken();
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...options.headers,
   };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
   const config: RequestInit = {
     method: options.method,

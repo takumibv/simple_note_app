@@ -48,3 +48,25 @@ export interface ApiError {
 export interface NotesQueryParams {
   group_id?: number;
 }
+
+// Auth types
+export interface User {
+  id: number;
+  email: string;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  password_confirmation: string;
+}

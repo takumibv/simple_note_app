@@ -1,14 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import type { Note, Group } from "@/types";
 import { notesApi, groupsApi, ApiClientError } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { Sidebar, Header } from "@/components/layout";
 import { NoteList, NoteEditor } from "@/components/notes";
 
 type View = "list" | "editor";
 
 export default function Home() {
+  const { isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  const router = useRouter();
   const [notes, setNotes] = useState<Note[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
@@ -17,6 +21,12 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [mobileView, setMobileView] = useState<View>("list");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [authLoading, isAuthenticated, router]);
 
   const fetchNotes = useCallback(async () => {
     try {
@@ -133,6 +143,14 @@ export default function Home() {
     setIsCreatingNote(false);
   };
 
+  if (authLoading || !isAuthenticated) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white dark:bg-zinc-950">
+        <div className="text-zinc-500 dark:text-zinc-400">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-white dark:bg-zinc-950">
       <Sidebar
@@ -140,6 +158,7 @@ export default function Home() {
         selectedGroupId={selectedGroupId}
         onSelectGroup={handleSelectGroup}
         onCreateGroup={handleCreateGroup}
+        onLogout={logout}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
