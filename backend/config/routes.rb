@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  post "/auth/register", to: "authentication#register"
+  post "/auth/login", to: "authentication#login"
+
   resources :groups
   resources :notes
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

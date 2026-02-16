@@ -10,11 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_15_231608) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_16_002520) do
   create_table "groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_groups_on_user_id"
   end
 
   create_table "notes", force: :cascade do |t|
@@ -23,9 +25,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_15_231608) do
     t.integer "group_id"
     t.string "title", limit: 255, null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["group_id"], name: "index_notes_on_group_id"
     t.index ["updated_at"], name: "index_notes_on_updated_at"
+    t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "password_digest"
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  add_foreign_key "groups", "users"
   add_foreign_key "notes", "groups"
+  add_foreign_key "notes", "users"
 end
