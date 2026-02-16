@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_15_144746) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_15_231608) do
   create_table "groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
   end
+
+  create_table "notes", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.integer "group_id"
+    t.string "title", limit: 255, null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_notes_on_group_id"
+    t.index ["updated_at"], name: "index_notes_on_updated_at"
+  end
+
+  add_foreign_key "notes", "groups"
 end
