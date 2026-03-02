@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: simple-note-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # Set manually in Render dashboard (Neon connection string)
+      - key: RAILS_MASTER_KEY
+        sync: false  # Set manually in Render dashboard
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
+    healthCheckPath: /up
