@@ -7,7 +7,12 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "localhost:5173", "localhost:3001"
+    origins(
+      "localhost:5173",
+      "localhost:3001",
+      "simple-note-app-kappa.vercel.app",
+      *ENV.fetch("CORS_ORIGINS", "").split(",").map(&:strip)
+    )
 
     resource "*",
       headers: :any,
